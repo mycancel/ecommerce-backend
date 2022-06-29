@@ -5,9 +5,10 @@ const { Category, Product } = require('../../models');
 
 router.get('/', (req, res) => {
   // find all categories
-  // TODO: be sure to include its associated Products
   try{ 
-    const categoryData = await Category.findAll();
+    const categoryData = await Category.findAll({
+      include: [{ model: Product }]
+    });
     return res.status(200).json(categoryData);
   } catch(err) {
     return res.status(500).json(err);
@@ -16,9 +17,10 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
   // find one category by its `id` value
-  // TODO: be sure to include its associated Products
   try {
-    const categoryData = await Category.findByPk(req.params.id);
+    const categoryData = await Category.findByPk(req.params.id, {
+      include: [{ model: Product }]
+    });
     if (!categoryData){
       return res.status(404).json({ message: 'No category with this id.' });
     }
